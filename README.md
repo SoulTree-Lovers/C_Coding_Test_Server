@@ -1,1 +1,1 @@
-# ConsoleGame
+# SSU C Programming education program
