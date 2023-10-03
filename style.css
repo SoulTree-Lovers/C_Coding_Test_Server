@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+#problems {
+    margin: 20px;
+}
+
+form {
+    text-align: center;
+}
+
+#error-message {
+    color: red;
+}
+
+#result {
+    text-align: center;
+}
