@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>정수 덧셈 서버 통신</title>
+</head>
+<body>
+    <h1>정수 덧셈 서버</h1>
+    <label for="inputNumber">정수 입력:</label>
+    <input type="text" id="inputNumber" placeholder="정수를 입력하세요">
+    <button onclick="sendNumber()">서버로 보내기</button>
+    <p id="result"></p>
+
+    <script>
+        function sendNumber() {
+            const inputValue = document.getElementById('inputNumber').value;
+
+            // 서버로 입력한 정수 보내기
+            fetch('http://localhost:8080', {
+                method: 'POST',
+                body: inputValue
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('result').textContent = `서버에서 받은 값: ${data}`;
+            })
+            .catch(error => {
+                console.error('오류:', error);
+            });
+        }
+    </script>
+</body>
+</html>
+ 
