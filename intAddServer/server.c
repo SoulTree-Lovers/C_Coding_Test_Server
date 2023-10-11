@@ -63,7 +63,7 @@ int main() {
     printf("buffer: %s\n", buffer);
     read(new_socket, buffer, sizeof(buffer));
     printf("buffer: %s\n", buffer);
-
+    
     
 
     // Content-Length (body) 값 추출
