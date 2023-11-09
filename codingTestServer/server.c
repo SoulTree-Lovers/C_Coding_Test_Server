@@ -42,7 +42,7 @@ int compile_code() {
 }
 
 // 테스트 케이스 실행 및 결과 확인 함수
-int run_tests() {
+int run_tests(char* result) {
     // 리다이렉션을 사용하여 입력과 출력을 파일로부터 가져오고 쓰기
     if (system("./ccode < test_input.txt > user_output.txt") != 0) {
         fprintf(stderr, "Runtime error.\n");
@@ -64,9 +64,9 @@ int run_tests() {
     fscanf(user_output, "%d", &user_sum);
 
     if (expected_sum == user_sum) {
-        printf("Test passed!\n");
+        sprintf(result, "정답입니다!\n");
     } else {
-        printf("Test failed. Expected: %d, Got: %d\n", expected_sum, user_sum);
+        sprintf(result, "실패입니다.. Expected: %d, Got: %d\n", expected_sum, user_sum);
     }
 
     // 자원 정리
@@ -155,31 +155,23 @@ int main() {
         }
     }
 
-    // int receivedValue = atoi(buffer);
-    // printf("receivedValue: %d\n", receivedValue);
-    // int newValue = receivedValue + 10;
-    // printf("newValue: %d\n", newValue);
-
-    char tempBuffer[1024];
-    // sprintf(tempBuffer, "%s", newValue);
-    // const char * value = tempBuffer;
-
-    // strcpy(buffer, value);
-
-    // 새로운 .c 파일에 값 저장
+    
     saveCodeToCFile("ccode.c", buffer);
+    
+    char result[1024] = ""; // 채점 결과 저장
 
-    if (compile_code() != 0) {
-        return 1; // 코드 컴파일에 실패했을 경우 종료
+    if (compile_code() == 0) {
+        if (run_tests(result) != 0) {
+            sprintf(result, "실패입니다.\n");
+        }
+    } else {
+        sprintf(result, "컴파일 실패입니다.\n");
     }
 
-    if (run_tests() != 0) {
-        return 1; // 테스트 실행에 실패했을 경우 종료
-    }
-
+    printf("result: %s\n", result);
     // CORS 설정을 포함한 응답 보내기
     char response[1024];
-    sprintf(response, "HTTP/1.1 200 OK\nContent-Type: text/plain\nAccess-Control-Allow-Origin: *\n\n%s", buffer);
+    sprintf(response, "HTTP/1.1 200 OK\nContent-Type: text/plain\nAccess-Control-Allow-Origin: *\n\n%s", result);
     send(new_socket, response, strlen(response), 0);
     printf("클라이언트에게 응답을 보냈습니다.\n");
 

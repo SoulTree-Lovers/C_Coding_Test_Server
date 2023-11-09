@@ -1,7 +1,3 @@
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById('inputCode').value = localStorage.getItem('savedCode');
-});
-
 function sendData() {
     const inputValue = document.getElementById('inputCode').value;
 
@@ -16,9 +12,30 @@ function sendData() {
     })
     .then(response => response.text())
     .then(data => {
-        document.getElementById('result').textContent = `서버에서 받은 값: ${data}`;
+        document.getElementById('result').textContent = `${data}`;
+        localStorage.setItem('lastResult', data);
     })
     .catch(error => {
         console.error('오류:', error);
     });
+}
+
+// 페이지 로딩 시 마지막 결과를 표시
+document.addEventListener("DOMContentLoaded", function() {
+    const lastResult = localStorage.getItem('lastResult');
+    if (lastResult) {
+        document.getElementById('result').textContent = `${lastResult}`;
+    }
+
+    const savedCode = localStorage.getItem('savedCode');
+    if (savedCode) {
+        document.getElementById('inputCode').value = savedCode;
+    }
+});
+
+function clearData() {
+    document.getElementById('inputCode').value = '';
+    document.getElementById('result').textContent = '';
+    localStorage.removeItem('savedCode');
+    localStorage.removeItem('lastResult');
 }

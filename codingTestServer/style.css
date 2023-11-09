@@ -9,6 +9,7 @@ h1 {
     color: #333;
     padding: 100px;
 }
+
 label {
     display: block;
     margin: 20px auto;
@@ -39,8 +40,21 @@ h2 {
     padding-left: 100px;
 }
 button:hover {
-    background-color: #45a049;
+    background-color: #6864b1;
 }
+.refresh{
+    background-color: #4ca5af;
+}
+.button-container {
+    width: 50%;
+    margin: auto;
+    display: flex;
+    /* text-align: center; */
+    justify-content: space-between;
+}
+/* .button-container button {
+    margin-right: 20px;
+} */
 .result-box {
     width: 50%;
     margin: 20px auto; /* 가운데 정렬 스타일 */
