@@ -9,6 +9,27 @@
 
 #define PORT 8080
 
+// 문자열을 .c 파일에 저장하는 함수
+void saveStringToCFile(const char *filename, const char *string) {
+    FILE *file_pointer;
+
+    // 파일을 쓰기 모드("w")로 열기
+    file_pointer = fopen(filename, "w+");
+
+    // 파일이 성공적으로 열렸는지 확인
+    if (file_pointer == NULL) {
+        printf("파일을 열 수 없습니다.\n");
+        return; // 에러 발생 시 함수 종료
+    }
+
+    // 문자열을 파일에 쓰기
+    fprintf(file_pointer, "%s", string);
+
+    // 파일 닫기
+    fclose(file_pointer);
+
+    printf("문자열을 파일에 성공적으로 저장했습니다.\n");
+}
 
 int main() {
     int server_fd, new_socket;
@@ -98,6 +119,9 @@ int main() {
     const char * value = tempBuffer;
 
     strcpy(buffer, value);
+
+    // 새로운 .c 파일에 값 저장
+    saveStringToCFile("value.c", value);
 
     // CORS 설정을 포함한 응답 보내기
     char response[1024];
