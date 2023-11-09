@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+h1 {
+    text-align: center; /* 가운데 정렬 스타일 */
+    color: #333;
+    padding: 100px;
+}
+label {
+    display: block;
+    margin: 20px auto;
+    color: #333;
+    width: 50%; /* textarea의 크기와 동일하게 설정 */
+}
+textarea {
+    width: 50%;
+    padding: 10px;
+    margin: 0 auto; /* 가운데 정렬 스타일 */
+    display: block; /* 가운데 정렬 스타일 */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+}
+button {
+    padding: 10px 40px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block; /* 가운데 정렬 스타일 */
+    margin: 0 auto; /* 가운데 정렬 스타일 */
+}
+h2 {
+    text-align: left; /* 가운데 정렬 스타일 */
+    padding-left: 100px;
+}
+button:hover {
+    background-color: #45a049;
+}
+.result-box {
+    width: 50%;
+    margin: 20px auto; /* 가운데 정렬 스타일 */
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center; /* 가운데 정렬 스타일 */
+}

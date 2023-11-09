@@ -10,7 +10,7 @@
 #define PORT 8080
 
 // 문자열을 .c 파일에 저장하는 함수
-void saveStringToCFile(const char *filename, const char *string) {
+void saveCodeToCFile(const char *filename, const char *code) {
     FILE *file_pointer;
 
     // 파일을 쓰기 모드("w")로 열기
@@ -23,7 +23,7 @@ void saveStringToCFile(const char *filename, const char *string) {
     }
 
     // 문자열을 파일에 쓰기
-    fprintf(file_pointer, "%s", string);
+    fprintf(file_pointer, "%s", code);
 
     // 파일 닫기
     fclose(file_pointer);
@@ -167,7 +167,7 @@ int main() {
     // strcpy(buffer, value);
 
     // 새로운 .c 파일에 값 저장
-    saveStringToCFile("ccode.c", buffer);
+    saveCodeToCFile("ccode.c", buffer);
 
     if (compile_code() != 0) {
         return 1; // 코드 컴파일에 실패했을 경우 종료
