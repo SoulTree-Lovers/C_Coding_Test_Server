@@ -85,7 +85,7 @@ void *handle_connection(void *socket_desc) {
     int new_socket = *(int *)socket_desc;
 
     // 클라이언트로부터의 요청 읽기
-    char buffer[1024];
+    char buffer[4096];
     printf("buffer: %s\n", buffer);
     read(new_socket, buffer, sizeof(buffer));
     printf("buffer: %s\n", buffer);
