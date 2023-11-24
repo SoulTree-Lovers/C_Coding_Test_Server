@@ -88,11 +88,13 @@ async function clearData() {
 }
 
 function loadNextProblem() {
+    localStorage.removeItem('lastResult');
     // 다음 문제 페이지로 이동
     window.location.href = "next_problem.html";
 }
 
 function loadPrevProblem() {
+    localStorage.removeItem('lastResult');
     // 이전 문제 페이지로 이동
     window.location.href = "index.html";
 }

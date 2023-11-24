@@ -1,0 +1,70 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>코딩테스트 웹사이트</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <h1>코딩테스트</h1>
+    <label for="inputCode">2. 사용자로부터 두 정수를 입력받아 곱한 값을 출력하세요.</label>
+    <textarea id="inputCode" placeholder="코드를 입력하세요" rows="20" cols="60"></textarea>
+    
+    <br>
+    <br>
+    <div class="button-container">
+        <button onclick="sendData()">제출하기</button>
+        <button class="refresh" onclick="clearData()">초기화</button>
+        <button class="page-switch-button" onclick="loadPrevProblem()">이전 문제</button>
+    </div>
+    
+    <br>
+    <div class="result-box">
+        <p><b>채점 결과</b></p>
+        <p id="result"></p>
+    </div>
+
+    <script src="script.js">
+        document.getElementById('inputCode').value = localStorage.getItem('savedCode');
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>코딩테스트 웹사이트</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/mode/clike/clike.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <h1>코딩테스트</h1>
+    <label for="inputCode">2. 사용자로부터 두 정수를 입력받아 곱한 값을 출력하세요.</label>
+    <div class="container">
+        <textarea id="inputCode" placeholder="코드를 입력하세요"></textarea>
+    </div>
+    <br>
+    <br>
+    <div class="button-container">
+        <button onclick="sendData()">제출하기</button>
+        <button class="refresh" onclick="clearData()">초기화</button>
+        <button class="page-switch-button" onclick="loadPrevProblem()">이전 문제</button>
+    </div>
+    
+    <br>
+    <div class="result-box">
+        <p><b>채점 결과</b></p>
+        <p id="result"></p>
+    </div>
+
+    <script src="script.js">
+        document.getElementById('inputCode').value = localStorage.getItem('savedCode');
+    </script>
+
+</body>
+</html>
