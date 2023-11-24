@@ -9,7 +9,6 @@ h1 {
     color: #333;
     padding: 100px;
 }
-
 label {
     display: block;
     margin: 20px auto;
@@ -17,13 +16,15 @@ label {
     width: 50%; /* textarea의 크기와 동일하게 설정 */
 }
 textarea {
-    width: 50%;
+    width: 100%;
+    height: auto;
     padding: 10px;
     margin: 0 auto; /* 가운데 정렬 스타일 */
     display: block; /* 가운데 정렬 스타일 */
     border: 1px solid #ccc;
     border-radius: 5px;
     resize: vertical;
+    box-sizing: border-box; /* padding과 border를 포함한 크기로 설정 */
 }
 button {
     padding: 10px 40px;
@@ -40,7 +41,7 @@ h2 {
     padding-left: 100px;
 }
 button:hover {
-    background-color: #6864b1;
+    opacity: 0.8;
 }
 .refresh{
     background-color: #4ca5af;
@@ -49,12 +50,8 @@ button:hover {
     width: 50%;
     margin: auto;
     display: flex;
-    /* text-align: center; */
     justify-content: space-between;
 }
-/* .button-container button {
-    margin-right: 20px;
-} */
 .result-box {
     width: 50%;
     margin: 20px auto; /* 가운데 정렬 스타일 */
@@ -64,3 +61,22 @@ button:hover {
     border-radius: 5px;
     text-align: center; /* 가운데 정렬 스타일 */
 }
+.page-switch-button {
+    background-color: rgb(235, 206, 87);
+}
+
+.container {
+    margin: auto;
+    position: relative;
+    height: auto;
+    width: 50%;
+}
+  
+#inputCode {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+  
