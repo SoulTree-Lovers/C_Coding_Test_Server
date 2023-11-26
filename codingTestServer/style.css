@@ -71,6 +71,14 @@ button:hover {
     margin-left: 20%;
     padding: 0;
 }
+.left-button-margin {
+    margin-left: 50%;
+    padding: 0;
+}
+.right-button-margin {
+    margin-right: 50%;
+    padding: 0;
+}
 .container {
     margin: auto;
     position: relative;
@@ -84,5 +92,4 @@ button:hover {
     right: 0;
     top: 0;
     bottom: 0;
-  }
-  
+}
