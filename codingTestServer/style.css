@@ -6,8 +6,11 @@ body {
 }
 h1 {
     text-align: center; /* 가운데 정렬 스타일 */
-    color: #333;
+    color: #2e90b3;
     padding: 100px;
+}
+h2 {
+    color:rgb(91, 91, 91)
 }
 label {
     display: block;
@@ -64,12 +67,15 @@ button:hover {
 .page-switch-button {
     background-color: rgb(235, 206, 87);
 }
-
+.left-margin {
+    margin-left: 20%;
+    padding: 0;
+}
 .container {
     margin: auto;
     position: relative;
     height: auto;
-    width: 50%;
+    width: 60%;
 }
   
 #inputCode {
