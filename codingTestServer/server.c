@@ -16,6 +16,7 @@
 
 int server_fd;
 
+/* 민석 */
 // 문자열을 .c 파일에 저장하는 함수
 void saveCodeToCFile(const char *filename, const char *code) {
     FILE *file_pointer;
@@ -38,6 +39,7 @@ void saveCodeToCFile(const char *filename, const char *code) {
     printf("문자열을 파일에 성공적으로 저장했습니다.\n");
 }
 
+/* 민석 */
 void handle_child_timeout(int sig) {
     if (sig == SIGALRM) {
         printf("자식 프로세스 타임아웃\n");
@@ -45,6 +47,7 @@ void handle_child_timeout(int sig) {
     }
 }
 
+/* 민석 */
 int run_process(const char* command, char* result, size_t result_size) {
     int status;
     int pipefd[2];
@@ -132,6 +135,7 @@ int run_process(const char* command, char* result, size_t result_size) {
     return WEXITSTATUS(status);
 }
 
+/* 민석 */
 // 사용자 코드 컴파일 함수
 int compile_code(const char *filename, char *result,size_t result_size) {
     // 사용자의 코드를 컴파일합니다.
@@ -140,12 +144,14 @@ int compile_code(const char *filename, char *result,size_t result_size) {
     return run_process(command, result,sizeof(result));
 }
 
+/* 민석 */
 void rtrim(char *string){
     char *back = string + strlen(string);
     while(isspace(*--back));
     *(back+1) = '\0';
 }
 
+/* 민석 */
 int run_tests(const char *command, const char *input_file, const char *expected_output_file, char* result) {
     FILE *fp_in = fopen(input_file, "r");
     FILE *fp_expected = fopen(expected_output_file, "r");
@@ -222,6 +228,7 @@ int run_tests(const char *command, const char *input_file, const char *expected_
     return fail_count;
 }
 
+/* 민석 */
 char* get_request_path(const char* request){
     static char path[256];
     if(sscanf(request, "POST %s ",path)==1){
@@ -233,6 +240,7 @@ char* get_request_path(const char* request){
     return NULL;
 }
 
+/* 승민 */
 int main() {
     struct sockaddr_in address;
     socklen_t addr_size = sizeof(address);
@@ -269,11 +277,11 @@ int main() {
     printf("서버가 포트 %d에서 실행 중입니다...\n", PORT);
    
     while(1){
-            // 클라이언트 연결 수락 및 데이터 처리
+        // 클라이언트 연결 수락 및 데이터 처리
         int new_socket;
         if ((new_socket = accept(server_fd, (struct sockaddr *)&address, &addr_size)) < 0) {
         perror("연결 수락 실패");
-        continue;
+            continue;
         }
 
         // 클라이언트로부터의 요청 읽기
@@ -338,7 +346,6 @@ int main() {
         printf("클라이언트에게 응답을 보냈습니다.\n");
 
         close(new_socket);
-
     }
 
     close(server_fd);

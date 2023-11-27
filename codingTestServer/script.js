@@ -48,7 +48,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 });
 
 async function clearData() {
-    // document.getElementById('inputCode').value = '';
     editor.setValue("");
     document.getElementById('result').textContent = '';
     localStorage.removeItem('savedCode');
