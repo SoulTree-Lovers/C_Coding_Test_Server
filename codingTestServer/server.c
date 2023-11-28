@@ -40,6 +40,7 @@ void saveCodeToCFile(const char *filename, const char *code) {
 }
 
 /* 민석 */
+// 자식 프로세스의 실행시간을 제한하기 위한 함수
 void handle_child_timeout(int sig) {
     if (sig == SIGALRM) {
         printf("자식 프로세스 타임아웃\n");
@@ -48,10 +49,11 @@ void handle_child_timeout(int sig) {
 }
 
 /* 민석 */
+// 프로세스를 생성하여 실행하는 함수
 int run_process(const char* command, char* result, size_t result_size) {
     int status;
-    int pipefd[2];
-    int errpipefd[2];
+    int pipefd[2];      // 자식프로세스의 표준 출력을 저장하는 파이프
+    int errpipefd[2];   // 자식프로세스의 표준 에러를 저장하는 파이프
     if(pipe(pipefd) == -1 || pipe(errpipefd)==-1) {
         perror("pipe");
         return 1;
@@ -72,29 +74,29 @@ int run_process(const char* command, char* result, size_t result_size) {
             exit(EXIT_FAILURE);
         }
         close(pipefd[0]); // 읽기 단락을 닫습니다.
-        close(pipefd[1]);
+        close(pipefd[1]); // 쓰기 단락을 닫습니다.
 
         // 표준 출력을 파이프의 쓰기 단락으로 재지정합니다.
-        if(dup2(errpipefd[1], STDOUT_FILENO) == -1){
+        if(dup2(errpipefd[1], STDERR_FILENO) == -1){
             perror("dup2_err");
             exit(EXIT_FAILURE);
         }
-        close(errpipefd[0]); // 읽기 단락을 닫습니다.
+        close(errpipefd[0]);
         close(errpipefd[1]);
 
-        // 자식 프로세스의 실행 시간 제한을 설정합니다.
+        // 자식 프로세스의 실행 시간 제한을 설정
         signal(SIGALRM, handle_child_timeout);
         alarm(3);
 
-        // 외부 명령어를 실행합니다.
+        // 외부 명령어를 실행
         execl("/bin/sh", "sh", "-c", command, (char*)NULL);
-        // execl 실패 시
+        // execl 실패 시 에러 발생, 프로세스 강제종료
         perror("execl");
         exit(EXIT_FAILURE);
     }else {
         // 부모 프로세스
-        close(pipefd[1]); // 쓰기 단락을 닫습니다.
-        close(errpipefd[1]); // 표준 에러 쓰기 단락을 닫습니다.
+        close(pipefd[1]); 
+        close(errpipefd[1]);
 
         // 자식 프로세스의 종료를 대기합니다.
         waitpid(pid, &status, 0);
@@ -109,42 +111,41 @@ int run_process(const char* command, char* result, size_t result_size) {
         }
         close(errpipefd[0]);
 
-        // 표준 출력의 결과를 읽습니다.
-        ssize_t count = read(pipefd[0], result, result_size - 1);
-        if (count > 0) {
-            result[count] = '\0'; // NULL 문자를 추가하여 문자열을 종료합니다.
-        } else if (count == 0 && errcount == 0) {
+        // 자식 프로세스의 표준 출력을 읽습니다.
+        ssize_t count = read(pipefd[0], result, result_size - 1); // count는 표준출력의 갯수
+        if (count > 0) {    // 표준출력이 존재
+            result[count] = '\0';
+        } else if (count == 0 && errcount == 0) {   //표준출력이 존재하지 않음
             strcpy(result, "오답입니다.\n");
         }
         close(pipefd[0]);
 
-        if (WIFSIGNALED(status)) {
-            int signal_number = WTERMSIG(status);
-            if (signal_number == SIGALRM){
+        if (WIFSIGNALED(status)) { // 자식 프로세스가 신호에 의해 종료되었다면
+            int signal_number = WTERMSIG(status);   // 종료시킨 신호의 번호를 반환
+            if (signal_number == SIGALRM){  //  SIGALRM에 의해 종료되었다면
                 strcpy(result, "실행 시간 초과입니다.\n");
-                return -1; // 실행 시간 초과를 나타내는 특별한 값으로 변경합니다.
+                return -1;
             }
-            // 다른 시그널에 의한 종료는 위에서 이미 처리되었습니다.
         } else if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
             strcpy(result, "프로그램 실행 실패.\n");
-            return -1; // 실행 실패를 나타내는 특별한 값으로 변경합니다.
+            return -1;
         }
     }
-
-
-    return WEXITSTATUS(status);
+    return WEXITSTATUS(status); // 자식프로세스의 종료 상태를 반환
 }
 
 /* 민석 */
 // 사용자 코드 컴파일 함수
 int compile_code(const char *filename, char *result,size_t result_size) {
-    // 사용자의 코드를 컴파일합니다.
+    // 사용자의 코드를 컴파일
     char command[256];
     sprintf(command, "gcc %s -o output", filename);
     return run_process(command, result,sizeof(result));
 }
 
 /* 민석 */
+// 문자열 끝의 공백문자를 제거하는 함수
+// 테스트한 코드의 output을 정리해주는 역할
 void rtrim(char *string){
     char *back = string + strlen(string);
     while(isspace(*--back));
@@ -152,6 +153,7 @@ void rtrim(char *string){
 }
 
 /* 민석 */
+// 컴파일 된 코드를 실행하고 입력 예제를 테스트하여 출력 예제와 비교하는 함수
 int run_tests(const char *command, const char *input_file, const char *expected_output_file, char* result) {
     FILE *fp_in = fopen(input_file, "r");
     FILE *fp_expected = fopen(expected_output_file, "r");
@@ -173,7 +175,7 @@ int run_tests(const char *command, const char *input_file, const char *expected_
     // 각 입력 케이스에 대해 테스트 실행
     while (fgets(input_line, sizeof(input_line), fp_in) != NULL && fgets(expected_line, sizeof(expected_line), fp_expected) != NULL) {
         // 임시 파일을 생성하여 입력을 저장
-        char temp_input_file[] = "temp_input_XXXXXX";
+        char temp_input_file[] = "temp_input_XXXXXX"; // 무작위 이름의 임시파일을 생성
         int fd = mkstemp(temp_input_file);
         if (fd == -1) {
             sprintf(result, "임시 파일 생성 실패.\n");
@@ -186,10 +188,10 @@ int run_tests(const char *command, const char *input_file, const char *expected_
         write(fd, input_line, strlen(input_line));
         close(fd);
 
-        // 명령어를 생성하여 테스트 실행
+        // 명령어를 생성
         char test_command[1024];
         sprintf(test_command, "%s < %s", command, temp_input_file);
-
+        // actual_output 배열 초기화
         memset(actual_output,0,sizeof(actual_output));
         // run_process를 사용하여 명령어 실행 및 결과 캡처
         run_status = run_process(test_command, actual_output,sizeof(actual_output));
@@ -197,14 +199,15 @@ int run_tests(const char *command, const char *input_file, const char *expected_
         // 임시 파일 삭제
         unlink(temp_input_file);
 
-        // run_process의 실행 결과 확인 dojak silpae
-        if (run_status != 0) {
+        // run_process의 실행 결과 확인
+        if (run_status != 0) {  // 프로세스의 실행이 비정상적인 종료 시
             strcpy(result, actual_output);
             fclose(fp_in);
             fclose(fp_expected);
             return 1;
         }
 
+        // 예상출력과 실행결과에서의 불필요한 공백 제거
         rtrim(expected_line);
         rtrim(actual_output);
 
@@ -229,6 +232,7 @@ int run_tests(const char *command, const char *input_file, const char *expected_
 }
 
 /* 민석 */
+// 웹페이지의 정보를 가져오는 함수, 문제의 번호를 구분해줌
 char* get_request_path(const char* request){
     static char path[256];
     if(sscanf(request, "POST %s ",path)==1){
@@ -286,12 +290,11 @@ int main() {
 
         // 클라이언트로부터의 요청 읽기
         char buffer[BUFFER_SIZE];
-        printf("buffer: %s\n", buffer);
         read(new_socket, buffer, sizeof(buffer));
-        printf("buffer: %s\n", buffer);
 
         int problem_number=0;   
         char *path = get_request_path(buffer);
+
         if(strcmp(path,"/index.html")==0){
             problem_number = 1;
         }
@@ -314,8 +317,7 @@ int main() {
                     char extractedValue[contentLength + 1];
                     strncpy(extractedValue, bodyStart, contentLength);
                     extractedValue[contentLength] = '\0';
-
-                    printf("추출된 값: %s\n", extractedValue);
+                    // printf("추출된 값: %s\n", extractedValue);
                     strcpy(buffer, extractedValue);
                 }
             }
@@ -325,27 +327,29 @@ int main() {
         sprintf(test_input,"test_input%d.txt", problem_number);
         sprintf(test_expected_output,"test_expected_output%d.txt", problem_number);
         sprintf(code_file,"ccode%d.c", problem_number);
-        saveCodeToCFile(code_file, buffer);
+        saveCodeToCFile(code_file, buffer); // 코드 .c 파일로 저장
         
         char result[BUFFER_SIZE];
 
+        // 코드 컴파일 및 실행 및 채점 결과 저장
         if (compile_code(code_file, result,sizeof(result)) == 0) { 
             if (run_tests("./output",test_input, test_expected_output, result) != 0) {
                 printf("%s",result);
             }
             else{
-                printf("test case all cleared!\n");
+                printf("테스트 케이스를 모두 통과하였습니다!\n");
             }
         } else {
-            printf("compile failed: %s\n", result);
+            printf("컴파일 실패: %s\n", result);
         }
-        // CORS 설정을 포함한 응답 보내기
+
+        // 클라이언트에게 채점 결과 전송
         char response[4096];
         sprintf(response, "HTTP/1.1 200 OK\nContent-Type: text/plain\nAccess-Control-Allow-Origin: *\n\n%s", result);
         send(new_socket, response, strlen(response), 0);
         printf("클라이언트에게 응답을 보냈습니다.\n");
 
-        close(new_socket);
+        close(new_socket); // 소켓 닫기
     }
 
     close(server_fd);
